@@ -54,7 +54,7 @@ async def on_message(message):
     conn.commit()
 
 @client.command()
-async def acc(ctx): #команда _account (где "_", ваш префикс указаный в начале)
+async def акк(ctx): #команда _account (где "_", ваш префикс указаный в начале)
     table=[["Nickname:","money:","lvl:","xp:"]]
     for row in cursor.execute(f"SELECT Nickname,money,lvl,xp FROM users where id={ctx.author.id}"):
         table.append([row[0],row[1],row[2],row[3]])
@@ -66,7 +66,7 @@ async def привет(ctx):
 
 @client.command()
 async def хелп(ctx):
-    await ctx.send('Я бот, да ты и сам знаешь.\n**Мои команды:**\n```!привет - в*ывод сообщения с приветом.``` ```!правила - свод правил сервера.``` ```!хелп - эта команда.``` ```!пароль (кол-во символов) - генератор паролей.``` ```!смайл - получить рандомный смайлик.``` ```!монетка - класическая монетка для твоего спора).``` ```!стата - статистика сервера.```')
+    await ctx.send('Я бот, да ты и сам знаешь.\n**Мои команды:**\n```!привет - в*ывод сообщения с приветом.``` ```!правила - свод правил сервера.``` ```!хелп - эта команда.``` ```!пароль (кол-во символов) - генератор паролей.``` ```!смайл - получить рандомный смайлик.``` ```!монетка - класическая монетка для твоего спора).``` ```!стата - статистика сервера.``` ```!акк - статистика аккаунта.```')
 
 @client.command()
 async def пароль(ctx, number: int):
@@ -84,11 +84,17 @@ async def смайл(ctx):
 async def монетка(ctx):
     await ctx.send(coin())
 
+@client.command() 
+async def роль(ctx):
+      member = ctx.message.author 
+      member_roles = member.roles
+      await ctx.send(f"{member.mention} список твоих ролей:\n{member_roles}")
+
 @client.command()
 async def стата(ctx):
-    embed=discord.Embed(title=f"Statystyki serwera {ctx.guild.name}")
-    embed.add_field(name="Users:", value=ctx.guild.member_count, inline=False)
-    embed.add_field(name="Channels:", value=(len(ctx.guild.channels) - a), inline=False)
+    embed=discord.Embed(title=f"Статистика сервера: {ctx.guild.name}")
+    embed.add_field(name="Пользователи:", value=ctx.guild.member_count, inline=False)
+    embed.add_field(name="Каналы:", value=(len(ctx.guild.channels) - a), inline=False)
     await ctx.send(embed=embed)
 
 
