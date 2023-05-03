@@ -1,6 +1,4 @@
-import discord
-import random
-import sqlite3
+import discord, os, random, sqlite3
 from tabulate import tabulate
 from discord.ext import commands
 from bot_logic import *
@@ -12,7 +10,7 @@ conn.commit()
 
 a = 2
 
-client = commands.Bot(command_prefix='!', intents=discord.Intents.all())
+client = commands.Bot(command_prefix='!', intents=discord.Intents.all(), help_command=None)
 
 
 @client.event
@@ -54,48 +52,84 @@ async def on_message(message):
     conn.commit()
 
 @client.command()
-async def акк(ctx): #команда _account (где "_", ваш префикс указаный в начале)
+async def akk(ctx): #команда _account (где "_", ваш префикс указаный в начале)
     table=[["Nickname:","money:","lvl:","xp:"]]
     for row in cursor.execute(f"SELECT Nickname,money,lvl,xp FROM users where id={ctx.author.id}"):
         table.append([row[0],row[1],row[2],row[3]])
         await ctx.send(f">\n{tabulate(table)}")
 
 @client.command()
-async def привет(ctx):
+async def privet(ctx):
     await ctx.send(f'{ctx.message.author.mention}, Привет!')
 
 @client.command()
-async def хелп(ctx):
+async def help(ctx):
     await ctx.send('Я бот, да ты и сам знаешь.\n**Мои команды:**\n```!привет - в*ывод сообщения с приветом.``` ```!правила - свод правил сервера.``` ```!хелп - эта команда.``` ```!пароль (кол-во символов) - генератор паролей.``` ```!смайл - получить рандомный смайлик.``` ```!монетка - класическая монетка для твоего спора).``` ```!стата - статистика сервера.``` ```!акк - статистика аккаунта.```')
 
 @client.command()
-async def пароль(ctx, number: int):
+async def parol(ctx, number: int):
     await ctx.send(gen_pass(number))
 
 @client.command()
-async def правила(ctx):
+async def pravila(ctx):
     await ctx.send('**Правила сервера:**\n1) Не использовать нецензурные выражения.\n2)Прислушиваться к администрации и модераторам сервера.\n3)Не рекламировать что-либо.')
 
 @client.command()
-async def смайл(ctx):
+async def smail(ctx):
     await ctx.send(smail())
 
 @client.command()
-async def монетка(ctx):
+async def monetka(ctx):
     await ctx.send(coin())
 
 @client.command() 
-async def роль(ctx):
+async def rol(ctx):
       member = ctx.message.author 
       member_roles = member.roles
       await ctx.send(f"{member.mention} список твоих ролей:\n{member_roles}")
 
 @client.command()
-async def стата(ctx):
+async def stata(ctx):
     embed=discord.Embed(title=f"Статистика сервера: {ctx.guild.name}")
     embed.add_field(name="Пользователи:", value=ctx.guild.member_count, inline=False)
     embed.add_field(name="Каналы:", value=(len(ctx.guild.channels) - a), inline=False)
     await ctx.send(embed=embed)
 
+@client.command()
+async def mem(ctx):
+    img_name = random.choice(os.listdir('images'))
+    with open(f'images/{img_name}', 'rb') as f:
+        picture = discord.File(f)
+    await ctx.send(file=picture)
 
+@client.command()
+async def vremya(ctx):
+    with open('images/musor/1.jpg', 'rb') as f:
+        picture = discord.File(f)
+    await ctx.send(file=picture)
+
+@client.command('duck')
+async def duck(ctx):
+    image_url = get_duck_image_url()
+    await ctx.send(image_url)
+
+@client.command('dog')
+async def dog(ctx):
+    image_url = get_dog_image_url()
+    await ctx.send(image_url)
+
+@client.command('fox')
+async def fox(ctx):
+    image_url = get_fox_image_url()
+    await ctx.send(image_url)
+
+@client.command('anime')
+async def anime(ctx, filter: str):
+    image_url = get_anime_image_url(filter)
+    await ctx.send(image_url)
+
+@client.command()
+async def ecologiya(ctx):
+    await ctx.send("Ооо, ты решил позаботиться о нашей природе? \nЭто очень похвально, что тебя интересует?\n\n\nВот что я могу тебе предложить: \n!vremya - картинка с данными времени разложения\n")
+    
 client.run("Token")
