@@ -1,4 +1,5 @@
 import random as r
+import requests
 
 def gen_pass(pass_length):
     elements = "+-/*!&$#?=@abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
@@ -26,3 +27,28 @@ def coin():
         pobeda = r.choice(storoni)
     
     return pobeda
+
+def get_duck_image_url():    
+    url = 'https://random-d.uk/api/random'
+    res = requests.get(url)
+    data = res.json()
+    return data['url']
+
+def get_dog_image_url():    
+    url = 'https://random.dog/woof.json'
+    res = requests.get(url)
+    data = res.json()
+    return data['url']
+
+def get_fox_image_url():    
+    url = 'https://randomfox.ca/floof/'
+    res = requests.get(url)
+    data = res.json()
+    return data['url']
+
+def get_anime_image_url(filter):
+    url = 'https://kitsu.io/api/edge/anime?filter[text]='+ filter
+    res = requests.get(url)
+    data = res.json()
+    return data['url']
+
