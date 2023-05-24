@@ -3,8 +3,10 @@ from tabulate import tabulate
 from discord.ext import commands
 from bot_logic import *
 
-conn = sqlite3.connect('Discord.sqlite3')
+
+conn = sqlite3.connect('dis_bot\\Discord.sqlite3')
 cursor = conn.cursor()
+#cursor.execute("CREATE TABLE users (id INT, nickname TEXT, mention TEXT, money INT, rep_rank TEXT, inventory TEXT, lvl INT, xp INT)")
 cursor.execute("SELECT * FROM users")
 conn.commit()
 
@@ -131,5 +133,17 @@ async def anime(ctx, filter: str):
 @client.command()
 async def ecologiya(ctx):
     await ctx.send("Ооо, ты решил позаботиться о нашей природе? \nЭто очень похвально, что тебя интересует?\n\n\nВот что я могу тебе предложить: \n!vremya - картинка с данными времени разложения\n")
-    
+
+@client.command('animal')
+async def animal(ctx):
+    image_url = get_animal_image_url()
+    await ctx.send(image_url)
+
+@client.command()
+async def dogs(ctx):
+    img_name = random.choice(os.listdir('images/dogs'))
+    with open(f'images/dogs/{img_name}', 'rb') as f:
+        picture = discord.File(f)
+    await ctx.send(file=picture)
+
 client.run("Token")
