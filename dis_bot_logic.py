@@ -1,12 +1,14 @@
-import random as r
+import random as ran
 import requests
+
+choices = [('https://randomfox.ca/floof/', 0.3), ('https://random.dog/woof.json', 0.5), ('https://random-d.uk/api/random', 0.2)]
 
 def gen_pass(pass_length):
     elements = "+-/*!&$#?=@abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
     password = ""
 
     for i in range(pass_length):
-        password += r.choice(elements)
+        password += ran.choice(elements)
 
     return password
 
@@ -15,7 +17,7 @@ def smail():
     itog = ''
 
     for i in range(1):
-        itog = r.choice(elements)
+        itog = ran.choice(elements)
     
     return itog
 
@@ -24,7 +26,7 @@ def coin():
     pobeda = ''
     
     for i in range(1):
-        pobeda = r.choice(storoni)
+        pobeda = ran.choice(storoni)
     
     return pobeda
 
@@ -52,3 +54,20 @@ def get_anime_image_url(filter):
     data = res.json()
     return data['url']
 
+def weighted_choice(choices):
+    total = sum(weight for choice, weight in choices)
+    r = ran.uniform(0, total)
+    cumulative_weight = 0
+    for choice, weight in choices:
+        cumulative_weight += weight
+        if r <= cumulative_weight:
+            return choice
+
+
+
+def get_animal_image_url():    
+    url = weighted_choice(choices)
+    res = requests.get(url)
+    data = res.json()
+    print(data['url'])
+    return data['url']
